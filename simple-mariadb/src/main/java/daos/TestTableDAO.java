@@ -4,6 +4,8 @@ import models.TestTable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +24,18 @@ public class TestTableDAO implements Dao<TestTable>{
     }
 
     @Override
-    public List<TestTable> getAll() {
+    public List<TestTable> getAll() throws SQLException {
         String sql = "SELECT * FROM test_table";
-        PreparedStatement pstmt;
-        return null;
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        while(rs.next()) {
+            TestTable row = new TestTable();
+            row.setStringId(rs.getInt("string_id"));
+            row.setString(rs.getString("string"));
+            testTables.add(row);
+        }
+        return testTables;
     }
 
     @Override
